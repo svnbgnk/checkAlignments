@@ -114,8 +114,8 @@ int main(int argc, char * argv[])
     int kk = 0;
     for (auto & [seq, id, qual] : reference_in)
     {
-        refIds.push_back(std::move(id));
-        redSeq.push_back(std::move(seq));
+        refIds.push_back(/*std::move*/(id));
+        redSeq.push_back(/*std::move*/(seq));
 //         idMap[refIds.back()] = kk;
 //         debug_stream << "!!!!!!!!!!!!!!!!!!!" << refIds.back() << "\n";
 //         ++kk;
@@ -140,6 +140,10 @@ int main(int argc, char * argv[])
     for (auto & record : finalign)
     {
         ++k;
+        if(k % 10000){
+            debug_stream << k << "\n";
+        }
+
         if(stop <= k && stop > 0)
             break;
         auto & id = get<seqan3::field::ID>(record);
@@ -189,8 +193,8 @@ int main(int argc, char * argv[])
         std::cout << "off  " << offsett << "\n";*/
         if(redSeq[refidd].size() <= offsett + endPos)
         {
-            std::cerr << "WARNING: Seq to short. Skipping\n";
-            continue;
+            std::cerr << "ERROR: Seq to short. Skipping\n";
+            exit(0);
         }
 //         std::span text_view{std::data(redSeq[refidd]) + offsetref, seq.size() + 1};
         std::span text_view{std::data(redSeq[refidd]) + offsett, static_cast<unsigned>(endPos)};
